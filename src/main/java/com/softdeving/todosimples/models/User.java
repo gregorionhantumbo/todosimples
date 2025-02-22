@@ -29,7 +29,8 @@ public class User {
     @NotBlank(groups = {CreateUser.class, UpdateUser.class})
     private String password;
 
-    //private List<Task> tasks new ArrayList<Task>();
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<Task>();
 
 
     public User() {
