@@ -10,6 +10,10 @@ import java.util.List;
 @Entity
 @Table(name = User.TABLE_NAME)
 public class User {
+    public Iterable<Task> getTasks() {
+        return tasks;
+    }
+
     public interface CreateUser{}
     public interface UpdateUser{}
 
