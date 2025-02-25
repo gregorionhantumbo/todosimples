@@ -1,45 +1,44 @@
 package com.softdeving.todosimples.services;
 
 import com.softdeving.todosimples.models.User;
-import com.softdeving.todosimples.repositories.TaskRepository;
 import com.softdeving.todosimples.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class UserService {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    public User findById(Long id){
-        Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(() -> new RuntimeException("Usuario nao achado! id:" + id + ", Tipo:" + User.class.getName()));
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado! ID: " + id));
     }
 
     @Transactional
-    public User create(User obj){
-        obj.setId(null);
-        obj = this.userRepository.save(obj);
-         return  obj;
+    public User create(User user) {
+        user.setId(null);
+        return userRepository.save(user);
     }
 
     @Transactional
-    public User update(User obj){
-        User newObj = findById(obj.getId());
-        newObj.setPassword(obj.getPassword());
-        return this.userRepository.save(newObj);
+    public User update(User user) {
+        User existingUser = findById(user.getId());
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(user.getPassword());
+        }
+        return userRepository.save(existingUser);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         findById(id);
-        try{
-            this.userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Nao eh possivel excuir esse usuario!");
+            throw new RuntimeException("Não é possível excluir este usuário, pois ele pode estar relacionado a outras entidades.");
         }
     }
 }
