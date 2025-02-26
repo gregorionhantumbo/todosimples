@@ -1,6 +1,6 @@
 package com.softdeving.todosimples.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,8 +13,9 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore // Evita problemas de serialização
+    @JsonBackReference
     private User user;
+
 
     @Column(name = "description", nullable = false, length = 200)
     @NotBlank

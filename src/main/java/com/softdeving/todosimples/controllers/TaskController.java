@@ -19,11 +19,14 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAll(@PathVariable Long userId) {
         List<Task> tasks = taskService.findAllByUserId(userId);
+        System.out.println("Tarefas para o usuário " + userId + ": " + tasks); // Verifique as tarefas no log
         return ResponseEntity.ok().body(tasks);
     }
+
+
 
     @PostMapping
     public ResponseEntity<Task> create(@Valid @RequestBody Task obj) {
