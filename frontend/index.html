@@ -1,60 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="script.js"></script>
+    <title>Lista de Tarefas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #f4f4f4; padding: 10px; margin: 5px 0; display: flex; justify-content: space-between; }
+        button { background: red; color: white; border: none; padding: 5px; cursor: pointer; }
+        .spinner-border { display: none; margin: 20px auto; }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center">Tarefas do Usuário</h1>
-    <div class="text-center mb-4">
-        <input type="number" id="userId" placeholder="ID do usuário" class="form-control w-25 mb-2">
-        <button class="btn btn-primary" onclick="loadTasks()">Carregar Tarefas</button>
-    </div>
-    <div id="loading" class="d-flex justify-content-center mb-4" style="display: none;">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Carregando...</span>
-        </div>
-    </div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Descrição</th>
-            <th>Usuário</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody id="taskTable"></tbody>
-    </table>
+<h1 class="text-center">Lista de Tarefas</h1>
 
-    <!-- Modal to edit task -->
-    <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editTaskModalLabel">Editar Tarefa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="taskDescription" class="form-label">Descrição</label>
-                        <input type="text" class="form-control" id="taskDescription">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" onclick="updateTask()">Salvar alterações</button>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <div class="input-group mb-3">
+        <input type="text" id="taskInput" class="form-control" placeholder="Nova tarefa">
+        <button class="btn btn-primary" onclick="addTask()">Adicionar</button>
     </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status" id="loading"></div>
+    </div>
+
+    <p class="h3 text-center">Tarefas do Usuário</p>
+
+    <table class="table table-hover">
+        <tbody id="taskList"></tbody>
+    </table>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

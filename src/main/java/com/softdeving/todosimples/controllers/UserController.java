@@ -12,6 +12,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin("*")
 @Validated
 public class UserController {
     private final UserService userService;

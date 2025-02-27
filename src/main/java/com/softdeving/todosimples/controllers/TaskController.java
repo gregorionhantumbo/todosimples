@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/task")
+@CrossOrigin("*") // Permite requisições do frontend
 @Validated
 public class TaskController {
     private final TaskService taskService;
@@ -22,23 +23,13 @@ public class TaskController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAll(@PathVariable Long userId) {
         List<Task> tasks = taskService.findAllByUserId(userId);
-        System.out.println("Tarefas para o usuário " + userId + ": " + tasks); // Verifique as tarefas no log
-        return ResponseEntity.ok().body(tasks);
+        return tasks.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(tasks);
     }
-
-
 
     @PostMapping
     public ResponseEntity<Task> create(@Valid @RequestBody Task obj) {
         Task createdTask = taskService.create(obj);
         return ResponseEntity.ok(createdTask);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@Valid @RequestBody Task obj, @PathVariable Long id) {
-        obj.setId(id);
-        Task updatedTask = taskService.update(obj);
-        return ResponseEntity.ok(updatedTask);
     }
 
     @DeleteMapping("/{id}")
