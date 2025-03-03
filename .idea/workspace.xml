@@ -18,8 +18,8 @@
         <option value="Interface" />
         <option value="Record" />
         <option value="HTML File" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
