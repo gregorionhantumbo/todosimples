@@ -1,6 +1,7 @@
 package com.softdeving.todosimples.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.softdeving.todosimples.models.enums.ProfileEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,9 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -36,35 +36,32 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
-//    public User() {
-//    }
-//
-//    public User(Long id, String username, String password) {
-//        this.id = id;
-//        this.username = username;
-//        this.password = password;
-//    }
-//
-//    public Long getId() { return id; }
-//    public void setId(Long id) { this.id = id; }
-//
-//    public String getUsername() { return username; }
-//    public void setUsername(String username) { this.username = username; }
-//
-//    public String getPassword() { return password; }
-//    public void setPassword(String password) { this.password = password; }
-//
-//    public List<Task> getTasks() { return tasks; }
-//    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @CollectionTable(name = "user_profile", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "profile", nullable = false)
+    private Set<Integer> profiles = new HashSet<>();
+
+    public Set<ProfileEnum> getProfiles() {
+        return this.profiles.stream()
+                .map(ProfileEnum::toEnum)
+                .collect(Collectors.toSet());
+    }
+
+    public void addProfile(ProfileEnum profileEnum) {
+        this.profiles.add(profileEnum.getCode());
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(tasks, user.tasks);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(tasks, user.tasks);
     }
 
     @Override

@@ -1,24 +1,24 @@
 package com.softdeving.todosimples.services;
 
 import com.softdeving.todosimples.models.User;
+import com.softdeving.todosimples.models.enums.ProfileEnum;
 import com.softdeving.todosimples.repositories.TaskRepository;
 import com.softdeving.todosimples.repositories.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-@AllArgsConstructor
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@RequiredArgsConstructor // 🔹 Injeta automaticamente os atributos final
 @Service
 public class UserService {
 
-    @Autowired
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
-
-    @Autowired
     private final TaskRepository taskRepository;
-//    public UserService(UserRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
 
     public User findById(Long id) {
         return userRepository.findById(id)
@@ -28,15 +28,20 @@ public class UserService {
     @Transactional
     public User create(User user) {
         user.setId(null);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword())); // 🔹 Senha codificada corretamente
+        user.setProfiles(Stream.of(ProfileEnum.USER.getCode()).collect(Collectors.toSet())); // 🔹 Correção aqui
         return userRepository.save(user);
     }
 
     @Transactional
     public void update(User user) {
         User existingUser = findById(user.getId());
+
+        // 🔹 Verifica primeiro se a senha foi informada antes de codificá-la
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(user.getPassword());
+            existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
+
         userRepository.save(existingUser);
     }
 

@@ -19,6 +19,7 @@
         <option value="Record" />
         <option value="HTML File" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
