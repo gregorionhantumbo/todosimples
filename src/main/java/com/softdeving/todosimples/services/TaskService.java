@@ -3,21 +3,26 @@ package com.softdeving.todosimples.services;
 import com.softdeving.todosimples.models.Task;
 import com.softdeving.todosimples.models.User;
 import com.softdeving.todosimples.repositories.TaskRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class TaskService {
 
+    @Autowired
     private final UserService userService;
+    @Autowired
     private final TaskRepository taskRepository;
 
-    public TaskService(UserService userService, TaskRepository taskRepository) {
-        this.userService = userService;
-        this.taskRepository = taskRepository;
-    }
+//    public TaskService(UserService userService, TaskRepository taskRepository) {
+//        this.userService = userService;
+//        this.taskRepository = taskRepository;
+//    }
 
     public Task findById(Long id) {
         return taskRepository.findById(id)
@@ -25,7 +30,8 @@ public class TaskService {
     }
 
     public List<Task> findAllByUserId(Long userId) {
-        return taskRepository.findAllByUserId(userId);
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     @Transactional
