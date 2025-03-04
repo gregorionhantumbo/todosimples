@@ -1,6 +1,8 @@
 package com.softdeving.todosimples.security;
 
+import com.softdeving.todosimples.models.User;
 import com.softdeving.todosimples.models.enums.ProfileEnum;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class UserSpringSecurity implements UserDetails {
 
@@ -28,6 +31,10 @@ public class UserSpringSecurity implements UserDetails {
                 .map(x -> new SimpleGrantedAuthority(x.getDescription()))
                 .collect(Collectors.toList());
     }
+
+    public UserSpringSecurity(User user) {
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {

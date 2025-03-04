@@ -2,11 +2,13 @@ package com.softdeving.todosimples.configs;
 
 import com.softdeving.todosimples.models.User;
 import com.softdeving.todosimples.repositories.UserRepository;
+import com.softdeving.todosimples.security.JWTAuthenticationFilter;
 import com.softdeving.todosimples.security.JWTUtil;
 import com.softdeving.todosimples.security.UserSpringSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -54,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_MATCHERS).permitAll()
                         .anyRequest().authenticated()
                 );
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
 
         return http.build();
     }
@@ -76,6 +79,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Lazy
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
             User user = userRepository.findByUsername(username).orElse(null);
