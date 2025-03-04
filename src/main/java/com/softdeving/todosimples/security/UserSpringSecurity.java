@@ -1,7 +1,6 @@
 package com.softdeving.todosimples.security;
 
 import com.softdeving.todosimples.models.enums.ProfileEnum;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,9 @@ public class UserSpringSecurity implements UserDetails {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = profileEnums.stream().map(x-> SimpleGrantedAuthority(x.getDescription().collect(Collectors.toList)));
+        this.authorities = profileEnums.stream()
+                .map(x -> new SimpleGrantedAuthority(x.getDescription()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -49,7 +49,8 @@ public class UserSpringSecurity implements UserDetails {
         return true;
     }
 
-    public boolean hasRole(ProfileEnum profileEnum){
-        return getAuthorities().contains(new SimpleGrantedAuthority(profileEnum.getDescription()));
+    public boolean hasRole(ProfileEnum profileEnum) {
+        return authorities.stream()
+                .anyMatch(granted -> granted.getAuthority().equals(profileEnum.getDescription()));
     }
 }
